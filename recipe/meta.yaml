@@ -18,7 +18,7 @@ build:
     - flit = flit:main
 
 requirements:
-  build:
+  host:
     - python
     - pip
     - docutils
