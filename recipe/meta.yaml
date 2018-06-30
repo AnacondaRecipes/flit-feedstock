@@ -12,8 +12,8 @@ source:
 
 build:
   number: 0
-  script: FLIT_ROOT_INSTALL=1 python -m flit install --deps=none  # [not win]
-  script: python -m flit install --deps=none  # [win]
+  script: FLIT_ROOT_INSTALL=1 {{PYTHON}} -m flit install --deps=none  # [not win]
+  script: {{PYTHON}} -m flit install --deps=none  # [win]
   skip: True  # [py2k]
   entry_points:
     - flit = flit:main
