@@ -1,4 +1,4 @@
-{% set version = "3.0.0" %}
+{% set version = "3.2.0" %}
 
 package:
   name: flit-core
@@ -6,10 +6,11 @@ package:
 
 source:
   url: https://pypi.io/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: b4fe0f84a1ffbf125d003e253ec98c0b6e3e31290b31fba3ad22d28588c20893
+  sha256: 592464c9268bbacec9bc67b5a3ae62e6e090aeec1563e69501df338a1728e551
   folder: source
 
 build:
+  noarch: python
   number: 0
 
 # Specifying `python` as a top-level build requirements to force conda to
@@ -30,7 +31,7 @@ outputs:
         - pip
       run:
         - python >=3.6
-        - pytoml
+        - toml
     test:
       imports:
         - flit_core
@@ -50,7 +51,7 @@ outputs:
         - docutils
         - requests
         - requests_download
-        - pytoml
+        - toml
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python >=3.6
@@ -58,7 +59,7 @@ outputs:
         - docutils
         - requests
         - requests_download
-        - pytoml
+        - toml
         - {{ pin_subpackage('flit-core', exact=True) }}
     test:
       imports:
