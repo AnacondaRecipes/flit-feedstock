@@ -1,4 +1,4 @@
-{% set version = "3.2.0" %}
+{% set version = "3.3.0" %}
 
 package:
   name: flit-core
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: 592464c9268bbacec9bc67b5a3ae62e6e090aeec1563e69501df338a1728e551
+  sha256: 65fbe22aaa7f880b776b20814bd80b0afbf91d1f95b17235b608aa256325ce57
   folder: source
 
 build:
@@ -17,7 +17,7 @@ build:
 # render the recipe correctly
 requirements:
   host:
-    - python >=3.6
+    - python
 
 outputs:
   - name: flit-core
@@ -27,7 +27,7 @@ outputs:
       noarch: python
     requirements:
       host:
-        - python >=3.6
+        - python
         - pip
       run:
         - python >=3.6
@@ -36,6 +36,11 @@ outputs:
       imports:
         - flit_core
         - flit_core.common
+      requires:
+        - pip
+        - python <3.10
+      commands:
+        - pip check
 
   - name: flit
     version: {{ version }}
@@ -46,7 +51,7 @@ outputs:
         - flit = flit:main
     requirements:
       host:
-        - python >=3.6
+        - python
         - pip
         - docutils
         - requests
@@ -58,13 +63,16 @@ outputs:
         - pip
         - docutils
         - requests
-        - requests_download
         - toml
         - {{ pin_subpackage('flit-core', exact=True) }}
     test:
       imports:
         - flit
+      requires:
+        - pip
+        - python <3.10
       commands:
+        - pip check
         - flit --version
 
 about:
@@ -73,6 +81,8 @@ about:
   license_family: BSD
   license_file: source/LICENSE
   summary: Simplified packaging of Python modules
+  dev_url: https://github.com/takluyver/flit
+  doc_url: https://flit.readthedocs.io/en/latest/
 
 extra:
   recipe-maintainers:
