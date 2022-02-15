@@ -55,8 +55,10 @@ outputs:
         - pip
         - docutils
         - requests
+        - setuptools
         - tomli
         - tomli-w
+        - wheel
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python >=3.6
