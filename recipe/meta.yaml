@@ -1,4 +1,4 @@
-{% set version = "3.3.0" %}
+{% set version = "3.6.0" %}
 
 package:
   name: flit-core
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: 65fbe22aaa7f880b776b20814bd80b0afbf91d1f95b17235b608aa256325ce57
+  sha256: b1464e006df4df4c8eeb37671c0e0ce66e1d04e4a36d91b702f180a25fde3c11
   folder: source
 
 build:
@@ -23,12 +23,14 @@ outputs:
   - name: flit-core
     version: {{ version }}
     build:
-      script: python -m pip install --no-deps -vv source/flit_core/
+      script: {{ PYTHON }} -m pip install --no-deps -vv source/flit_core/
       noarch: python
     requirements:
       host:
         - python
         - pip
+        - setuptools
+        - wheel
       run:
         - python >=3.6
     test:
@@ -37,7 +39,6 @@ outputs:
         - flit_core.common
       requires:
         - pip
-        - python <3.10
       commands:
         - pip check
 
@@ -54,8 +55,10 @@ outputs:
         - pip
         - docutils
         - requests
+        - setuptools
         - tomli
         - tomli-w
+        - wheel
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python >=3.6
@@ -70,7 +73,6 @@ outputs:
         - flit
       requires:
         - pip
-        - python <3.10
       commands:
         - pip check
         - flit --version
