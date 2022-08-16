@@ -11,7 +11,7 @@ source:
 
 build:
   noarch: python
-  number: 0
+  number: 1
 
 # Specifying `python` as a top-level build requirements to force conda to
 # render the recipe correctly
@@ -30,9 +30,13 @@ outputs:
         - python
         - pip
         - setuptools
+        - tomli
+        - tomli-w
         - wheel
       run:
         - python >=3.6
+        - tomli
+        - tomli-w
     test:
       imports:
         - flit_core
