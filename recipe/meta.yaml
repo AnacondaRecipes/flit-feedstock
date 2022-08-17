@@ -53,7 +53,11 @@ outputs:
   - name: flit
     version: {{ version }}
     build:
-      script: cd source/ && FLIT_ROOT_INSTALL=1 python -m flit install --deps=none
+      # there is an error with FLIT_ROOT_INSTALL on windows, the solution is to remove this section
+      # there is some information on this  on the following issue https://github.com/pypa/flit/issues/487
+      # in addition on this item: https://flit.pypa.io/en/latest/cmdline.html#envvar-FLIT_ROOT_INSTALL
+      script: cd source/ && FLIT_ROOT_INSTALL=1 python -m flit install --deps=none  # [not win]
+      script: cd source/ && python -m flit install --deps=none  # [win]
       noarch: python
       entry_points:
         - flit = flit:main
