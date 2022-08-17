@@ -29,12 +29,16 @@ outputs:
       host:
         - python
         - pip
+        - docutils
+        - requests
         - setuptools
         - tomli
         - tomli-w
         - wheel
       run:
         - python >=3.6
+        - docutils
+        - requests
         - tomli
         - tomli-w
     test:
