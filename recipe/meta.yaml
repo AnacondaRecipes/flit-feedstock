@@ -87,7 +87,7 @@ about:
   license_family: BSD
   license_file: source/LICENSE
   summary: Simplified packaging of Python modules
-  dev_url: https://github.com/takluyver/flit
+  dev_url: https://github.com/pypa/flit
   doc_url: https://flit.readthedocs.io/en/latest/
 
 extra:
