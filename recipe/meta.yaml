@@ -29,16 +29,12 @@ outputs:
       host:
         - python
         - pip
-        - docutils
-        - requests
         - setuptools
         - tomli
         - tomli-w
         - wheel
       run:
         - python >=3.6
-        - docutils
-        - requests
         - tomli
         - tomli-w
     test:
@@ -53,9 +49,7 @@ outputs:
   - name: flit
     version: {{ version }}
     build:
-      # there is an error with FLIT_ROOT_INSTALL on windows, the solution is to remove this section
-      # there is some information on this  on the following issue https://github.com/pypa/flit/issues/487
-      # in addition on this item: https://flit.pypa.io/en/latest/cmdline.html#envvar-FLIT_ROOT_INSTALL
+      # there is an error with FLIT_ROOT_INSTALL on windows
       script: cd source/ && FLIT_ROOT_INSTALL=1 python -m flit install --deps=none  # [not win]
       script: cd source/ && python -m flit install --deps=none  # [win]
       noarch: python
