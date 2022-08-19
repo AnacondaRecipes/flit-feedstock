@@ -49,9 +49,8 @@ outputs:
   - name: flit
     version: {{ version }}
     build:
-      # there is an error with FLIT_ROOT_INSTALL on windows
       script: cd source/ && FLIT_ROOT_INSTALL=1 python -m flit install --deps=none  # [not win]
-      script: cd source/ && python -m flit install --deps=none  # [win]
+      script: cd source/ && python -m flit install --deps=none  # [win]  # this solves the win build error 
       noarch: python
       entry_points:
         - flit = flit:main
