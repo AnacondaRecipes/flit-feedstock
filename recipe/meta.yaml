@@ -69,6 +69,7 @@ outputs:
         - flit.build
       requires:
         - pip
+        - m2-grep  # [win]
       commands:
         - pip check
         - flit --version | grep -Fq {{ version }}
