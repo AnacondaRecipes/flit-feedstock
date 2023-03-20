@@ -62,6 +62,7 @@ outputs:
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python
+        - pip      # pip may be executed with 'install' argument passed to flit
         - docutils
         - requests
         - tomli-w
@@ -72,10 +73,10 @@ outputs:
         - flit.build
       requires:
         - pip
-        - m2-grep  # [win]
+        - ripgrep
       commands:
         - pip check
-        - flit --version | grep -Fq {{ version }}
+        - flit --version | rg {{ version }}
 
 about:
   home: https://flit.pypa.io/en/stable/
