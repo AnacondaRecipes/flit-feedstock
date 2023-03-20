@@ -44,7 +44,9 @@ outputs:
   - name: flit
     version: {{ version }}
     build:
-      script: cd source/ && FLIT_ROOT_INSTALL=1 python -m flit install --deps=none
+      script: set FLIT_ROOT_INSTALL=1  # [win]
+      script: FLIT_ROOT_INSTALL=1  # [not win]
+      script: cd source/ && {{ PYTHON }} -m flit install --deps=none
       entry_points:
         - flit = flit:main
     requirements:
