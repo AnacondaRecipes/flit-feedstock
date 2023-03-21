@@ -1,4 +1,4 @@
-{% set version = "3.6.0" %}
+{% set version = "3.8.0" %}
 
 package:
   name: flit-core
@@ -6,12 +6,12 @@ package:
 
 source:
   url: https://pypi.io/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: b1464e006df4df4c8eeb37671c0e0ce66e1d04e4a36d91b702f180a25fde3c11
+  sha256: d0f2a8f4bd45dc794befbf5839ecc0fd3830d65a57bd52b5997542fac5d5e937
   folder: source
 
 build:
-  noarch: python
   number: 0
+  skip: True  # [py<36]
 
 # Specifying `python` as a top-level build requirements to force conda to
 # render the recipe correctly
@@ -24,7 +24,6 @@ outputs:
     version: {{ version }}
     build:
       script: {{ PYTHON }} -m pip install --no-deps -vv source/flit_core/
-      noarch: python
     requirements:
       host:
         - python
@@ -32,7 +31,7 @@ outputs:
         - setuptools
         - wheel
       run:
-        - python >=3.6
+        - python
     test:
       imports:
         - flit_core
@@ -45,8 +44,10 @@ outputs:
   - name: flit
     version: {{ version }}
     build:
-      script: cd source/ && FLIT_ROOT_INSTALL=1 python -m flit install --deps=none
-      noarch: python
+      script_env:
+        - FLIT_ROOT_INSTALL=1
+      script: 
+        - cd source/ && {{ PYTHON }} -m flit install --deps=none
       entry_points:
         - flit = flit:main
     requirements:
@@ -56,35 +57,39 @@ outputs:
         - docutils
         - requests
         - setuptools
-        - tomli
         - tomli-w
         - wheel
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
-        - python >=3.6
-        - pip
+        - python
+        - pip      # pip may be executed with 'install' argument passed to flit
         - docutils
         - requests
-        - tomli
         - tomli-w
         - {{ pin_subpackage('flit-core', exact=True) }}
     test:
       imports:
         - flit
+        - flit.build
       requires:
         - pip
+        - ripgrep
       commands:
         - pip check
-        - flit --version
+        - flit --version | rg {{ version }}
 
 about:
-  home: https://flit.readthedocs.io/
+  home: https://flit.pypa.io/en/stable/
   license: BSD-3-Clause
   license_family: BSD
   license_file: source/LICENSE
   summary: Simplified packaging of Python modules
+  description: |
+    Flit is a simple way to put Python packages and modules on PyPI. 
+    It tries to require less thought about packaging and helps avoid 
+    common mistakes. 
   dev_url: https://github.com/takluyver/flit
-  doc_url: https://flit.readthedocs.io/en/latest/
+  doc_url: https://flit.pypa.io/en/latest/
 
 extra:
   recipe-maintainers:
