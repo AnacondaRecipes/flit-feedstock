@@ -41,6 +41,10 @@ outputs:
       commands:
         - pip check
 
+  # When building out the initial package set for a new Python version the
+  # recommendation is to build flit-core first.
+  # If boostsrap: yes, build flit-core only; otherwise build all the outputs.
+  {% if boostsrap != 'yes' %}
   - name: flit
     version: {{ version }}
     build:
@@ -77,6 +81,7 @@ outputs:
       commands:
         - pip check
         - flit --version | rg {{ version }}
+  {% endif %}
 
 about:
   home: https://flit.pypa.io/en/stable/
