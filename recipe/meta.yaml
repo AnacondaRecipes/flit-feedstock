@@ -10,7 +10,7 @@ source:
   folder: source
 
 build:
-  number: 0
+  number: 1
   skip: True  # [py<36]
 
 # Specifying `python` as a top-level build requirements to force conda to
@@ -23,13 +23,12 @@ outputs:
   - name: flit-core
     version: {{ version }}
     build:
-      script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv source/flit_core/
+      script:
+        - cd source/flit_core && {{ PYTHON }} -m flit_core.wheel
+        - {{ PYTHON }} bootstrap_install.py dist/flit_core-{{ version }}-py3-none-any.whl
     requirements:
       host:
         - python
-        - pip
-        - setuptools
-        - wheel
       run:
         - python
     test:
@@ -60,9 +59,7 @@ outputs:
         - pip
         - docutils
         - requests
-        - setuptools
         - tomli-w
-        - wheel
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python
