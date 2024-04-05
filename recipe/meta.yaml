@@ -10,7 +10,7 @@ source:
   folder: source
 
 build:
-  number: 0
+  number: 1
   skip: True  # [py<36]
 
 # Specifying `python` as a top-level build requirements to force conda to
@@ -23,13 +23,16 @@ outputs:
   - name: flit-core
     version: {{ version }}
     build:
-      script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv source/flit_core/
+      script:
+        # flit-core is a core python dependency and it used to bootstrap the whole packaging ecosystem.
+        # Because of that, it cannot depend on anything except python itself.
+        # We can't use pip because to build pip, we need setuptools and wheel. wheel requires flit-core.
+        # So flit-core is "self-hosting" and provides its own build and install methods.
+        - cd source/flit_core && {{ PYTHON }} -m flit_core.wheel
+        - {{ PYTHON }} bootstrap_install.py dist/flit_core-{{ version }}-py3-none-any.whl
     requirements:
       host:
         - python
-        - pip
-        - setuptools
-        - wheel
       run:
         - python
     test:
@@ -43,8 +46,8 @@ outputs:
 
   # When building out the initial package set for a new Python version the
   # recommendation is to build flit-core first.
-  # If boostsrap: yes, build flit-core only; otherwise build all the outputs.
-  {% if boostsrap != 'yes' %}
+  # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
+  {% if bootstrap != 'yes' %}
   - name: flit
     version: {{ version }}
     build:
@@ -60,9 +63,7 @@ outputs:
         - pip
         - docutils
         - requests
-        - setuptools
         - tomli-w
-        - wheel
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python
