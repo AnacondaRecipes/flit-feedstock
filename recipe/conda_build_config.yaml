@@ -1,4 +1,4 @@
 # When building out the initial package set for a new Python version the
 # recommendation is to build flit-core first.
-# If boostsrap: yes, build flit-core only; otherwise build all the outputs.
-boostsrap: no
+# If bootstrap: yes, build flit-core only; otherwise build all the outputs.
+bootstrap: no
