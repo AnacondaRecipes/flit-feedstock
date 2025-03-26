@@ -1,4 +1,4 @@
-{% set version = "3.9.0" %}
+{% set version = "3.12.0" %}
 
 package:
   name: flit-suite
@@ -6,12 +6,12 @@ package:
 
 source:
   url: https://pypi.io/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: d75edf5eb324da20d53570a6a6f87f51e606eee8384925cd66a90611140844c7
+  sha256: 1c80f34dd96992e7758b40423d2809f48f640ca285d0b7821825e50745ec3740
   folder: source
 
 build:
-  number: 1
-  skip: True  # [py<36]
+  number: 0
+  skip: true  # [py<36]
 
 # Specifying `python` as a top-level build requirements to force conda to
 # render the recipe correctly
@@ -43,17 +43,15 @@ outputs:
         - pip
       commands:
         - pip check
-
   # When building out the initial package set for a new Python version the
   # recommendation is to build flit-core first.
-  # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
-  {% if bootstrap != 'yes' %}
-  - name: flit
+  <conda_recipe_manager.types.SentinelType object at 0x7fb5a5661f40>:  # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
+    - name: flit
     version: {{ version }}
     build:
       script_env:
         - FLIT_ROOT_INSTALL=1
-      script: 
+      script:
         - cd source/ && {{ PYTHON }} -m flit install --deps=none
       entry_points:
         - flit = flit:main
@@ -67,7 +65,7 @@ outputs:
         - {{ pin_subpackage('flit-core', exact=True) }}
       run:
         - python
-        - pip      # pip may be executed with 'install' argument passed to flit
+        - pip  # pip may be executed with 'install' argument passed to flit
         - docutils
         - requests
         - tomli-w
@@ -82,7 +80,6 @@ outputs:
       commands:
         - pip check
         - flit --version | rg {{ version }}
-  {% endif %}
 
 about:
   home: https://flit.pypa.io/en/stable/
@@ -91,9 +88,9 @@ about:
   license_file: source/LICENSE
   summary: Simplified packaging of Python modules
   description: |
-    Flit is a simple way to put Python packages and modules on PyPI. 
-    It tries to require less thought about packaging and helps avoid 
-    common mistakes. 
+    Flit is a simple way to put Python packages and modules on PyPI.
+    It tries to require less thought about packaging and helps avoid
+    common mistakes.
   dev_url: https://github.com/takluyver/flit
   doc_url: https://flit.pypa.io/en/latest/
 
