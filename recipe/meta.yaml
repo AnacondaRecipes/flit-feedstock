@@ -1,17 +1,16 @@
-{% set version = "3.9.0" %}
+{% set version = "3.12.0" %}
 
 package:
   name: flit-suite
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: d75edf5eb324da20d53570a6a6f87f51e606eee8384925cd66a90611140844c7
-  folder: source
+  url: https://pypi.org/packages/source/f/flit/flit-{{ version }}.tar.gz
+  sha256: 1c80f34dd96992e7758b40423d2809f48f640ca285d0b7821825e50745ec3740
 
 build:
-  number: 1
-  skip: True  # [py<36]
+  number: 0
+  skip: True  # [py<38]
 
 # Specifying `python` as a top-level build requirements to force conda to
 # render the recipe correctly
@@ -28,11 +27,13 @@ outputs:
         # Because of that, it cannot depend on anything except python itself.
         # We can't use pip because to build pip, we need setuptools and wheel. wheel requires flit-core.
         # So flit-core is "self-hosting" and provides its own build and install methods.
-        - cd source/flit_core && {{ PYTHON }} -m flit_core.wheel
+        - cd flit_core && {{ PYTHON }} -m flit_core.wheel
         - {{ PYTHON }} bootstrap_install.py dist/flit_core-{{ version }}-py3-none-any.whl
     requirements:
       host:
         - python
+        - wheel
+        - setuptools
       run:
         - python
     test:
@@ -54,7 +55,7 @@ outputs:
       script_env:
         - FLIT_ROOT_INSTALL=1
       script: 
-        - cd source/ && {{ PYTHON }} -m flit install --deps=none
+        - {{ PYTHON }} -m flit install --deps=none
       entry_points:
         - flit = flit:main
     requirements:
@@ -72,30 +73,52 @@ outputs:
         - requests
         - tomli-w
         - {{ pin_subpackage('flit-core', exact=True) }}
+
+    # Linux tries to access .git folder during testing, which is not the case as it is built using .tar.gz
+    {% set tests_to_skip = "test_build_main" %}
+    {% set tests_to_skip = tests_to_skip + " or test_build_sdist_only" %}
+    {% set tests_to_skip = tests_to_skip + " or test_build_ns_main" %}
+    {% set tests_to_skip = tests_to_skip + " or test_install_requires" %}
+    {% set tests_to_skip = tests_to_skip + " or test_symlink_other_python" %}
+    {% set tests_to_skip = tests_to_skip + " or test_pip_install" %}
+    {% set tests_to_skip = tests_to_skip + " or test_test_writable_dir_win" %}
+    {% set tests_to_skip = tests_to_skip + " or test_get_files_list_git" %}
+    {% set tests_to_skip = tests_to_skip + " or test_get_files_list_hg" %}
+    
     test:
+      source_files:
+        - tests
+        - pyproject.toml
       imports:
         - flit
         - flit.build
       requires:
         - pip
+        - pytest >=2.7.3
+        - testpath
+        - responses
         - ripgrep
       commands:
         - pip check
+        - echo ON  # [win]
         - flit --version | rg {{ version }}
+        - pytest tests -v -p no:warnings  # [not linux]
+        - pytest tests -v -k "not ({{ tests_to_skip }})"  # [linux]
+
   {% endif %}
 
 about:
-  home: https://flit.pypa.io/en/stable/
+  home: https://flit.pypa.io
   license: BSD-3-Clause
   license_family: BSD
-  license_file: source/LICENSE
+  license_file: LICENSE
   summary: Simplified packaging of Python modules
   description: |
     Flit is a simple way to put Python packages and modules on PyPI. 
     It tries to require less thought about packaging and helps avoid 
     common mistakes. 
   dev_url: https://github.com/takluyver/flit
-  doc_url: https://flit.pypa.io/en/latest/
+  doc_url: https://flit.pypa.io
 
 extra:
   recipe-maintainers:
@@ -103,3 +126,5 @@ extra:
     - minrk
     - takluyver
     - ocefpaf
+  skip-lints:
+    - wrong_output_script_key
