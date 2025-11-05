@@ -1,13 +1,4 @@
 {% set version = "3.12.0" %}
-{% set tests_to_skip = "test_build_main" %}
-{% set tests_to_skip = tests_to_skip + " or test_build_sdist_only" %}
-{% set tests_to_skip = tests_to_skip + " or test_build_ns_main" %}
-{% set tests_to_skip = tests_to_skip + " or test_install_requires" %}
-{% set tests_to_skip = tests_to_skip + " or test_symlink_other_python" %}
-{% set tests_to_skip = tests_to_skip + " or test_pip_install" %}
-{% set tests_to_skip = tests_to_skip + " or test_test_writable_dir_win" %}
-{% set tests_to_skip = tests_to_skip + " or test_get_files_list_git" %}
-{% set tests_to_skip = tests_to_skip + " or test_get_files_list_hg" %}
 
 package:
   name: flit-suite
@@ -56,6 +47,7 @@ outputs:
   # When building out the initial package set for a new Python version the
   # recommendation is to build flit-core first.
   # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
+  {% if bootstrap != 'yes' %}
   - name: flit
     version: {{ version }}
     build:
@@ -80,7 +72,18 @@ outputs:
         - requests
         - tomli-w
         - {{ pin_subpackage('flit-core', exact=True) }}
+
     # Linux tries to access .git folder during testing, which is not the case as it is built using .tar.gz
+    {% set tests_to_skip = "test_build_main" %}
+    {% set tests_to_skip = tests_to_skip + " or test_build_sdist_only" %}
+    {% set tests_to_skip = tests_to_skip + " or test_build_ns_main" %}
+    {% set tests_to_skip = tests_to_skip + " or test_install_requires" %}
+    {% set tests_to_skip = tests_to_skip + " or test_symlink_other_python" %}
+    {% set tests_to_skip = tests_to_skip + " or test_pip_install" %}
+    {% set tests_to_skip = tests_to_skip + " or test_test_writable_dir_win" %}
+    {% set tests_to_skip = tests_to_skip + " or test_get_files_list_git" %}
+    {% set tests_to_skip = tests_to_skip + " or test_get_files_list_hg" %}
+
     test:
       source_files:
         - tests
@@ -100,6 +103,8 @@ outputs:
         - flit --version | rg {{ version }}
         - pytest tests -v -p no:warnings  # [not linux]
         - pytest tests -v -k "not ({{ tests_to_skip }})"  # [linux]
+
+  {% endif %}
 
 about:
   home: https://flit.pypa.io
