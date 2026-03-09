@@ -114,7 +114,7 @@ about:
     Flit is a simple way to put Python packages and modules on PyPI.
     It tries to require less thought about packaging and helps avoid
     common mistakes.
-  dev_url: https://github.com/takluyver/flit
+  dev_url: https://github.com/pypa/flit
   doc_url: https://flit.pypa.io
 
 extra:
