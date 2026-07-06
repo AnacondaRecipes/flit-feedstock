@@ -32,8 +32,6 @@ outputs:
     requirements:
       host:
         - python
-        - wheel
-        - setuptools
       run:
         - python
     test:
