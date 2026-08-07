@@ -2,3 +2,6 @@
 # recommendation is to build flit-core first.
 # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
 bootstrap: yes
+
+python:
+  - 3.15

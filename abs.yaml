@@ -1,3 +1,9 @@
+build_parameters:
+  - "--suppress-variables"
+  - "--error-overlinking"
+  - "--error-overdepending"
+  - "--no-test"
+
 upload_channels:
   - ad-testing/label/py315
 
