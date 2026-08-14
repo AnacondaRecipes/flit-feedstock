@@ -1,4 +1,7 @@
 # When building out the initial package set for a new Python version the
 # recommendation is to build flit-core first.
 # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
-bootstrap: no
+bootstrap: yes
+
+python:
+  - 3.15
