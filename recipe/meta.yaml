@@ -9,7 +9,8 @@ source:
   sha256: 232bc4317279e8952eca9fb3f5e000d8395d693b39c105b99f619ce461e1da85
 
 build:
-  number: 0
+  # bump vs PKG-17019 flit#21 / prior py315 _0 on ad-testing/label/py315
+  number: 1
   skip: true  # [py<38]
 
 # Specifying `python` as a top-level build requirements to force conda to
