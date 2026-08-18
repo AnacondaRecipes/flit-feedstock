@@ -7,6 +7,7 @@ build_parameters:
 upload_channels:
   - ad-testing/label/py315
 
+# After promote: python + flit-core on testing
 channels:
   - ad-testing/label/py315
 
