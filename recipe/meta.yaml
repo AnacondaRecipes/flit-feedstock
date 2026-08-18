@@ -1,28 +1,19 @@
-{% set version = "4.0.2" %}
-{% set tests_to_skip = "test_build_main" %}
-{% set tests_to_skip = tests_to_skip + " or test_build_sdist_only" %}
-{% set tests_to_skip = tests_to_skip + " or test_build_ns_main" %}
-{% set tests_to_skip = tests_to_skip + " or test_install_requires" %}
-{% set tests_to_skip = tests_to_skip + " or test_symlink_other_python" %}
-{% set tests_to_skip = tests_to_skip + " or test_pip_install" %}
-{% set tests_to_skip = tests_to_skip + " or test_test_writable_dir_win" %}
-{% set tests_to_skip = tests_to_skip + " or test_get_files_list_git" %}
-{% set tests_to_skip = tests_to_skip + " or test_get_files_list_hg" %}
+{% set version = "3.12.0" %}
 
-# Specifying `python` as a top-level build requirements to force conda to
-# render the recipe correctly
 package:
   name: flit-suite
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/f/flit/flit-{{ version }}.tar.gz
-  sha256: 232bc4317279e8952eca9fb3f5e000d8395d693b39c105b99f619ce461e1da85
+  sha256: 1c80f34dd96992e7758b40423d2809f48f640ca285d0b7821825e50745ec3740
 
 build:
-  number: 0
+  number: 2
   skip: true  # [py<38]
 
+# Specifying `python` as a top-level build requirements to force conda to
+# render the recipe correctly
 requirements:
   host:
     - python
@@ -54,6 +45,7 @@ outputs:
   # When building out the initial package set for a new Python version the
   # recommendation is to build flit-core first.
   # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
+  {% if bootstrap != 'yes' %}
   - name: flit
     version: {{ version }}
     build:
@@ -78,7 +70,18 @@ outputs:
         - requests
         - tomli-w
         - {{ pin_subpackage('flit-core', exact=True) }}
+
     # Linux tries to access .git folder during testing, which is not the case as it is built using .tar.gz
+    {% set tests_to_skip = "test_build_main" %}
+    {% set tests_to_skip = tests_to_skip + " or test_build_sdist_only" %}
+    {% set tests_to_skip = tests_to_skip + " or test_build_ns_main" %}
+    {% set tests_to_skip = tests_to_skip + " or test_install_requires" %}
+    {% set tests_to_skip = tests_to_skip + " or test_symlink_other_python" %}
+    {% set tests_to_skip = tests_to_skip + " or test_pip_install" %}
+    {% set tests_to_skip = tests_to_skip + " or test_test_writable_dir_win" %}
+    {% set tests_to_skip = tests_to_skip + " or test_get_files_list_git" %}
+    {% set tests_to_skip = tests_to_skip + " or test_get_files_list_hg" %}
+
     test:
       source_files:
         - tests
@@ -98,6 +101,8 @@ outputs:
         - flit --version | rg {{ version }}
         - pytest tests -v -p no:warnings  # [not linux]
         - pytest tests -v -k "not ({{ tests_to_skip }})"  # [linux]
+
+  {% endif %}
 
 about:
   home: https://flit.pypa.io
