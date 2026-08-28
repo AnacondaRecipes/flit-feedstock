@@ -1,7 +1,7 @@
 # When building out the initial package set for a new Python version the
 # recommendation is to build flit-core first.
 # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
-bootstrap: no
+bootstrap: yes
 # Until AnacondaRecipes/aggregate#534 merges: t-only overlay.
 # Must zip python+numpy with equal length (aggregate zip_keys).
 python:
