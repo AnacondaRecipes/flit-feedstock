@@ -9,7 +9,7 @@ source:
   sha256: 232bc4317279e8952eca9fb3f5e000d8395d693b39c105b99f619ce461e1da85
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<38]
 
 # Specifying `python` as a top-level build requirements to force conda to
