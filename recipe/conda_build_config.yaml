@@ -2,13 +2,3 @@
 # recommendation is to build flit-core first.
 # If bootstrap: yes, build flit-core only; otherwise build all the outputs.
 bootstrap: yes
-# Until AnacondaRecipes/aggregate#534 merges: t-only overlay.
-# Must zip python+numpy with equal length (aggregate zip_keys).
-python:
-  - "3.14.* *_cp314t"
-numpy:
-  - 2.3
-zip_keys:
-  -
-    - python
-    - numpy
