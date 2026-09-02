@@ -22,6 +22,9 @@ outputs:
   - name: flit-core
     version: {{ version }}
     build:
+      # Same feature as python 3.14t so unspecified solves prefer GIL twins.
+      track_features:
+        - free-threading  # [is_freethreading]
       script:
         # flit-core is a core python dependency and it used to bootstrap the whole packaging ecosystem.
         # Because of that, it cannot depend on anything except python itself.
@@ -49,6 +52,8 @@ outputs:
   - name: flit
     version: {{ version }}
     build:
+      track_features:
+        - free-threading  # [is_freethreading]
       script_env:
         - FLIT_ROOT_INSTALL=1
       script:
